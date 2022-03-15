@@ -3,8 +3,13 @@ const Player = (id, name, symbol) => {
     const getId = () => id;
     const getName = () => name;
     const getSymbol = () => symbol;
-    return {getName, getId, getSymbol};
+    return {plays, getName, getId, getSymbol};
 }
+
+const domManip = () => {
+
+}
+
 
 const gameBoard = () => {
     let choice;
@@ -13,13 +18,10 @@ const gameBoard = () => {
         let startBtn = document.querySelector('.startBtn');
         startBtn.addEventListener('click', event => {
             console.log("gameBoard.loadBoard fired");
-            loadBoard();
+            gb.loadBoard();
         })
         console.log("buttons initialized");
     })();
-
-
-
 
     const loadBoard = () => {
         let gameTiles = [1,2,3,4,5,6,7,8,9];
@@ -36,9 +38,6 @@ const gameBoard = () => {
             grid.append(tile);
         })
     }
-
-
-
     return {loadBoard, choice, initializeBtns};
 }
 
@@ -81,19 +80,22 @@ const gameLogic = (() => {
     }
 
     let pvp = (e) => {
+        let p = 1;
         choice = e.target.dataset.number;
-        console.log(choice);
-        let isAvail = isPicked(a, choice);
-        if (isAvail) {
+        if (p == 1) {
+            e.target.textContent = a.getSymbol();
             a.plays.push(choice);
             console.log(a.plays);
         }
+        if (p == 2) {
+            e.target.textContent = b.getSymbol();
+            console.log(b.plays);
+        }
+
     }
-
-
     return {winningCombinations, isPicked, checkWin, pvp} ;
 })();
 
 let a = Player(1, "player one", "x");
-a.plays = [1,2,3];
+let b = Player(2, "player two", "o");
 let gb = gameBoard();
