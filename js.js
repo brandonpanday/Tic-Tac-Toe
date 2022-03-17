@@ -1,29 +1,28 @@
 const Player = (id, name, symbol) => {
-    let plays = [];
+    let playedTiles = [];
     const getId = () => id;
     const getName = () => name;
     const getSymbol = () => symbol;
-    return {plays, getName, getId, getSymbol};
+    return {playedTiles, getName, getId, getSymbol};
 }
 
-const domManip = () => {
+let one = Player(1, "brandon", "x");
+let two = Player(2, "panday", "o");
 
-}
-
-
-const gameBoard = () => {
-    let choice;
-
+const displayController = (() => {
     const initializeBtns = (() => {
         let startBtn = document.querySelector('.startBtn');
         startBtn.addEventListener('click', event => {
-            console.log("gameBoard.loadBoard fired");
-            gb.loadBoard();
+            console.log("tileFnPvp()");
+            tileFnPvp();
         })
-        console.log("buttons initialized");
+        let restartBtn = document.querySelector('.restartBtn');
+        restartBtn.addEventListener('click', event => {
+            console.log("restartBtn fired");
+        })
     })();
 
-    const loadBoard = () => {
+    const loadBoard = (() => {
         let gameTiles = [1,2,3,4,5,6,7,8,9];
         let grid = document.createElement('div');
         grid.setAttribute('class', 'gameContainer');
@@ -34,68 +33,45 @@ const gameBoard = () => {
             let tile = document.createElement('div');
             tile.setAttribute('class', 'tile');
             tile.setAttribute('data-number', item);
-            tile.addEventListener('click', gameLogic.pvp);
             grid.append(tile);
         })
+    })();
+
+    const tileFnPvp = () => {
+        let tiles = document.querySelectorAll('.tile');
+        tiles.forEach(tile => {
+            tile.addEventListener('click', gameLogic.play);
+        });
     }
-    return {loadBoard, choice, initializeBtns};
-}
+
+    return { initializeBtns, loadBoard, tileFnPvp }
+})();
 
 const gameLogic = (() => {
-
     const winningCombinations = [
         [1,2,3], [4,5,6], [7,8,9], // Horizontal
         [1,4,7], [2,5,8], [3,6,9], // Vertical
         [1,5,9], [3,5,7] // Diagonal
     ];
 
-    const isPicked = (Player, i) => {
-        let x = true;
-        let player = Player.plays;
-        player.forEach(num => {
-            if (num == i) {
-                x = false;
-            }
-        })
-        return x;
-    }
-    
-    const checkWin = (Player) => {
-        let x = false;
-        if (Player.plays.length >= 3) {
-            for (let combo of winningCombinations) {
-                let i = 0;
-                for (let num of combo) {
-                    if (Player.plays.includes(num)) {
-                        i++;
-                        if (i == 3) {
-                            x = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return x;
-    }
+    // Put game logic here
+    // take input assign to players array
+    // check for win on assignment
+    // set counter for odd and even 1 = player one plays / 2 = player 2 plays
+    // Check if number already played (remove attribute)
+    // if counter == 1 Player1.playedTiles.push(e) / if 2 Player2.tiles.push(num)
+    // edit textcontent of tile player1.getSymbol() / PLayer 2 getSymbol
+    // checkWin -> remove event listeners if win, disable start btn. Enable restart btn during play
 
-    let pvp = (e) => {
-        let p = 1;
-        choice = e.target.dataset.number;
-        if (p == 1) {
-            e.target.textContent = a.getSymbol();
-            a.plays.push(choice);
-            console.log(a.plays);
+    const play = (e) => {
+        if (e.target.dataset.number != undefined) {
+            one.playedTiles.push(e.target.dataset.number);
+            delete e.target.dataset.number;
+            console.log(one.playedTiles);
         }
-        if (p == 2) {
-            e.target.textContent = b.getSymbol();
-            console.log(b.plays);
-        }
-
     }
-    return {winningCombinations, isPicked, checkWin, pvp} ;
+    return { play };
+
 })();
 
-let a = Player(1, "player one", "x");
-let b = Player(2, "player two", "o");
-let gb = gameBoard();
+// Boards of Canada

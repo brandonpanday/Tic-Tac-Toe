@@ -10,15 +10,14 @@ body {
     margin: 0 auto;
 }
 .gameContainer {
-    width: 340px;
-    height: 340px;
+    width: 240px;
+    height: 240px;
     background-color: black;
     display: grid;
     grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
     grid-gap: 0.1em;
-    padding: 0.3em;
-    margin: 0.5em 0;
+    margin: 2em 0;
 }
 .tile {
     width: 100%;
@@ -27,18 +26,4 @@ body {
     justify-content: center;
     align-items: center;
     background-color: white;
-}
-
-.resultsHeader {
-    width: 340px;
-    height: 40px;
-    background-color: green;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.resultsLog {
-    background-color: purple;
-    width: 340px;
-    height: 240px;
 }
