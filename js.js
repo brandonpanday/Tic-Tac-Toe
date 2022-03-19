@@ -6,9 +6,6 @@ const Player = (id, name, symbol) => {
     return {playedTiles, getName, getId, getSymbol};
 }
 
-let one = Player(1, "brandon", "x");
-let two = Player(2, "panday", "o");
-
 const displayController = (() => {
     const initializeBtns = (() => {
         let startBtn = document.querySelector('.startBtn');
@@ -44,16 +41,44 @@ const displayController = (() => {
         });
     }
 
-    return { initializeBtns, loadBoard, tileFnPvp }
+    const removeTileFn = () => {
+        let tiles = document.querySelectorAll('.tile');
+        tiles.forEach(tile => {
+            tile.removeEventListener('click', gameLogic.play);
+        });
+    }
+
+    return { initializeBtns, loadBoard, tileFnPvp, removeTileFn }
 })();
 
 const gameLogic = (() => {
+
+    let one = Player(1, "brandon", "x");
+    let two = Player(2, "notBrandon", "o");
+
+
+    let count = 1; // take input on who plays first to decide whether count % 2 
     const winningCombinations = [
         [1,2,3], [4,5,6], [7,8,9], // Horizontal
         [1,4,7], [2,5,8], [3,6,9], // Vertical
         [1,5,9], [3,5,7] // Diagonal
     ];
 
+    const checkWin = (player) => {
+        let x = false;
+        winningCombinations.forEach(combo => {
+            for (let i = 0; i < combo.length; i++) {
+                if (player.playedTiles.includes(combo[0]) && 
+                    player.playedTiles.includes(combo[1]) && 
+                    player.playedTiles.includes(combo[2]))
+                {
+                    x = true;
+                    break;
+                }
+            }
+        })
+        return x;
+    }
     // Put game logic here
     // take input assign to players array
     // check for win on assignment
@@ -63,15 +88,36 @@ const gameLogic = (() => {
     // edit textcontent of tile player1.getSymbol() / PLayer 2 getSymbol
     // checkWin -> remove event listeners if win, disable start btn. Enable restart btn during play
 
+    // how to assign plays to each player
     const play = (e) => {
         if (e.target.dataset.number != undefined) {
-            one.playedTiles.push(e.target.dataset.number);
-            delete e.target.dataset.number;
-            console.log(one.playedTiles);
+            if (count % 2 == 1) {
+                e.target.textContent = one.getSymbol();
+                one.playedTiles.push(parseInt(e.target.dataset.number));
+                delete e.target.dataset.number;
+                console.log(one.playedTiles);
+                console.log(two.playedTiles);
+                if (checkWin(one)) {
+                    console.log("WIN");
+                    displayController.removeTileFn();
+                }
+                count ++;
+            }
+            else if (count % 2 == 0) {
+                e.target.textContent = two.getSymbol();
+                two.playedTiles.push(parseInt(e.target.dataset.number));
+                delete e.target.dataset.number;
+                console.log(one.playedTiles);
+                console.log(two.playedTiles);
+                if (checkWin(two)) {
+                    console.log("WIN");
+                    displayController.removeTileFn();
+                }
+                count ++;
+            }
         }
     }
-    return { play };
-
+    return { play, count };
 })();
 
 // Boards of Canada
