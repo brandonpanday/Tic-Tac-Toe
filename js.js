@@ -13,10 +13,10 @@ const displayController = (() => {
             console.log("tileFnPvp()");
             tileFnPvp();
         })
-        let restartBtn = document.querySelector('.restartBtn');
-        restartBtn.addEventListener('click', event => {
-            console.log("restartBtn fired");
-        })
+        // let restartBtn = document.querySelector('.restartBtn');
+        // restartBtn.addEventListener('click', event => {
+        //     console.log("restartBtn fired");
+        // })
     })();
 
     const loadBoard = (() => {
@@ -58,6 +58,7 @@ const gameLogic = (() => {
 
 
     let count = 1; // take input on who plays first to decide whether count % 2 
+
     const winningCombinations = [
         [1,2,3], [4,5,6], [7,8,9], // Horizontal
         [1,4,7], [2,5,8], [3,6,9], // Vertical
@@ -65,19 +66,18 @@ const gameLogic = (() => {
     ];
 
     const checkWin = (player) => {
-        let x = false;
         winningCombinations.forEach(combo => {
             for (let i = 0; i < combo.length; i++) {
                 if (player.playedTiles.includes(combo[0]) && 
                     player.playedTiles.includes(combo[1]) && 
                     player.playedTiles.includes(combo[2]))
                 {
-                    x = true;
+                    console.log("WIN");
+                    displayController.removeTileFn();
                     break;
                 }
             }
         })
-        return x;
     }
     // Put game logic here
     // take input assign to players array
@@ -96,25 +96,16 @@ const gameLogic = (() => {
                 one.playedTiles.push(parseInt(e.target.dataset.number));
                 delete e.target.dataset.number;
                 console.log(one.playedTiles);
-                console.log(two.playedTiles);
-                if (checkWin(one)) {
-                    console.log("WIN");
-                    displayController.removeTileFn();
-                }
-                count ++;
+                checkWin(one)
             }
             else if (count % 2 == 0) {
                 e.target.textContent = two.getSymbol();
                 two.playedTiles.push(parseInt(e.target.dataset.number));
                 delete e.target.dataset.number;
-                console.log(one.playedTiles);
                 console.log(two.playedTiles);
-                if (checkWin(two)) {
-                    console.log("WIN");
-                    displayController.removeTileFn();
-                }
-                count ++;
+                checkWin(two)
             }
+            count ++;
         }
     }
     return { play, count };
