@@ -72,7 +72,7 @@ const gameLogic = (() => {
                     player.playedTiles.includes(combo[1]) && 
                     player.playedTiles.includes(combo[2]))
                 {
-                    alert(player + " wins!");
+                    alert(player.getSymbol() + " wins!");
                     displayController.removeTileFn();
                     break;
                 }
